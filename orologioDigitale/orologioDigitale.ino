@@ -20,12 +20,52 @@ DS1302 rtc(2, 3, 4);
 
 uint32_t colore = strip.Color(255, 0, 0);
 
-const short int pallini[] = {50, 51};
-const short  int offsetCifre[] =  {0, 25, 52, 77};
-const short  int moduli[7][4] = {{0, 1, 2, 3}, {4, 5, 6, -1}, {7, 8, 9, 10}, {11, 12, 13, -1}, {14, 15, 16, 17}, {18, 19, 20, -1}, {21, 22, 23, 24}};
-const short  int numeri[10][7] = {{1, 2, 3, 5, 6, 7, -1}, {3, 7, -1, -1, -1, -1, -1}, {1, 2, 4, 6, 7, -1, -1}, {2, 3, 4, 6, 7, -1, -1}, {3, 4, 5, 7, -1, -1, -1}, {2, 3, 4, 5, 6, -1, -1}, {1, 2, 3, 4, 5, -1, -1}, {3, 6, 7, -1, -1, -1, -1}, {1, 2, 3, 4, 5, 6, 7}, {3, 4, 5, 6, 7, -1, -1}};
+const short int arrayColori[24][3] = {{18, 19, 41},     // 00:xx
+                                      {29, 23, 55},     // 01:xx
+                                      {39, 37, 85},     // 02:xx
+                                      {42, 46, 106},    // 03:xx
+                                      {1, 87, 94},      // 04:xx
+                                      {0, 104, 134},    // 05:xx
+                                      {0, 146, 161},    // 06:xx
+                                      {103, 179, 108},  // 07:xx
+                                      {139, 255, 81},   // 08:xx
+                                      {18, 19, 41},     // 09:xx
+                                      {221, 220, 31},   // 10:xx
+                                      {255, 255, 0},    // 11:xx
+                                      {243, 174, 0},    // 12:xx
+                                      {239, 121, 0},    // 13:xx
+                                      {244, 89, 0},     // 14:xx
+                                      {231, 56, 39},    // 15:xx
+                                      {209, 49, 39},    // 16:xx
+                                      {222, 28, 20},    // 17:xx
+                                      {227, 6, 19},     // 18:xx
+                                      {192, 22, 52},    // 19:xx
+                                      {129, 22, 52},    // 20:xx
+                                      {103, 27, 85},    // 21:xx
+                                      {70, 51, 138},    // 22:xx
+                                      {40, 46, 101}};  // 23:xx
+const short int pallini[2] = {50, 51};
+const short int offsetCifre[4] =  {0, 25, 52, 77};
+const short int moduli[7][4] = {{0, 1, 2, 3},
+                                {4, 5, 6, -1},
+                                {7, 8, 9, 10},
+                                {11, 12, 13, -1},
+                                {14, 15, 16, 17},
+                                {18, 19, 20, -1},
+                                {21, 22, 23, 24}};
+const short int numeri[10][7] = {{1, 2, 3, 5, 6, 7, -1},
+                                 {3, 7, -1, -1, -1, -1, -1},
+                                 {1, 2, 4, 6, 7, -1, -1},
+                                 {2, 3, 4, 6, 7, -1, -1},
+                                 {3, 4, 5, 7, -1, -1, -1},
+                                 {2, 3, 4, 5, 6, -1, -1},
+                                 {1, 2, 3, 4, 5, -1, -1},
+                                 {3, 6, 7, -1, -1, -1, -1},
+                                 {1, 2, 3, 4, 5, 6, 7},
+                                 {3, 4, 5, 6, 7, -1, -1}};
 
 String oraCorrente = "";
+int oraVecchia = -1;
 int short cifraUno = 0;
 int short cifraDue = 0;
 int short cifraTre = 0;
@@ -52,9 +92,8 @@ void setup()
 
   // Le seguenti linee possono essere commentate per utilizzare i valori già memorizzati nel DS1302
   rtc.setDOW(SUNDAY);         // Imposta il giorno della settimana a SUNDAY
-  rtc.setTime(18, 32, 0);     // Imposta l'ora (Formato 24hr)
+  rtc.setTime(13, 32, 0);     // Imposta l'ora (Formato 24hr)
   rtc.setDate(1, 1, 2020);    // Imposta la data
-
 }
 
 void loop()
@@ -84,7 +123,10 @@ void loop()
   }
   
   //Controllo ora per impostare il colore dell'orologio
-  controlloOra((String(oraCorrente[0]) + String(oraCorrente[1])).toInt());
+  if((String(oraCorrente[0]) + String(oraCorrente[1])).toInt() != oraVecchia) {
+    controlloOra((String(oraCorrente[0]) + String(oraCorrente[1])).toInt());
+    oraVecchia = (String(oraCorrente[0]) + String(oraCorrente[1])).toInt();
+  }
   
   for(int i=0; i<7; i++) {
     if(uno[i] != -1) {
@@ -128,85 +170,8 @@ void loop()
   strip.show();
   delay(1000);
 }
-
 void controlloOra(int ora) {
-  switch(ora) {
-  case 0:
-    colore = strip.Color(18, 19, 41);
-    break;
-  case 1:
-    colore = strip.Color(29, 23, 55);
-    break;
-  case 2:
-    colore = strip.Color(39, 37, 85);
-    break;
-  case 3:
-    colore = strip.Color(42, 46, 106);
-    break;
-  case 4:
-    colore = strip.Color(1, 87, 94);
-    break;
-  case 5:
-    colore = strip.Color(0, 104, 134);
-    break;
-  case 6:
-    colore = strip.Color(0, 146, 161);
-    break;
-  case 7:
-    colore = strip.Color(103, 179, 108);
-    break;
-  case 8:
-    colore = strip.Color(139, 255, 81);
-    break;
-  case 9:
-    colore = strip.Color(18, 19, 41);
-    break;
-  case 10:
-    colore = strip.Color(221, 220, 31);
-    break;
-  case 11:
-    colore = strip.Color(255, 255, 0);
-    break;
-  case 12:
-    colore = strip.Color(243, 174, 0);
-    break;
-  case 13:
-    colore = strip.Color(239, 121, 0);
-    break;
-  case 14:
-    colore = strip.Color(244, 89, 0);
-    break;
-  case 15:
-    colore = strip.Color(231, 59, 39);
-    break;
-  case 16:
-    colore = strip.Color(209, 49, 39);
-    break;
-  case 17:
-    colore = strip.Color(222, 28, 20);
-    break;
-  case 18:
-    colore = strip.Color(227, 6, 19);
-    break;
-  case 19:
-    colore = strip.Color(192, 22, 52);
-    break;
-  case 20:
-    colore = strip.Color(129, 22, 52);
-    break;
-  case 21:
-    colore = strip.Color(103, 27, 85);
-    break;
-  case 22:
-    colore = strip.Color(70, 51, 138);
-    break;
-  case 23:
-    colore = strip.Color(40, 46, 101);
-    break;
-  default:
-    colore = strip.Color(255, 255, 255);
-    break;
-  }
+    colore = strip.Color(arrayColori[ora][2], arrayColori[ora][1], arrayColori[ora][2]);
 }
 
 void coloraCifra(int led) {
