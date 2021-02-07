@@ -1,5 +1,4 @@
 /*
-  Sono utilizzati i seguenti pin
   Pin +5V           -> Alimentazione modulo RTC
   Pin GND           -> GND modulo RTC
   Pin Digital 2     -> Pin CE - RST modulo RTC
@@ -42,10 +41,11 @@ void setup()
     clock_prescale_set(clock_div_1);
   #endif
 
-  strip.begin();           // INITIALIZE NeoPixel strip object (REQUIRED)
-  strip.show();            // Turn OFF all pixels ASAP
-  strip.setBrightness(255); // Luminosità (min = 0)(max = 255)
-  
+  strip.begin();            // Inizializzazione Neopixel
+  strip.clear();            // Spegne tutti i led
+  strip.show();             // Spegne tutti i led
+  strip.setBrightness(255); // Luminosità (0 - 255)
+
   // Imposta RTC in run-mode e disabilita la protezione da scrittura
   rtc.halt(false);
   rtc.writeProtect(false);
@@ -53,7 +53,7 @@ void setup()
   // Le seguenti linee possono essere commentate per utilizzare i valori già memorizzati nel DS1302
   rtc.setDOW(SUNDAY);         // Imposta il giorno della settimana a SUNDAY
   rtc.setTime(18, 32, 0);     // Imposta l'ora (Formato 24hr)
-  rtc.setDate(1, 1, 2020);   // Imposta la data
+  rtc.setDate(1, 1, 2020);    // Imposta la data
 
 }
 
