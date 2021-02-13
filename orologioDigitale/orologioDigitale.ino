@@ -7,7 +7,11 @@
 */
 
 #include <DS1302.h>
+#include <TimedAction.h>
 #include <Adafruit_NeoPixel.h>
+
+DS1302 rtc(2, 3, 4);
+
 #ifdef __AVR__
  #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
 #endif
@@ -16,9 +20,7 @@
 #define LED_COUNT 102
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
-DS1302 rtc(2, 3, 4);
-
-uint32_t colore = strip.Color(255, 0, 0);
+uint32_t colore = strip.Color(255, 255, 255);
 
 const short int arrayColori[24][3] = {{18, 19, 41},     // 00:xx
                                       {29, 23, 55},     // 01:xx
@@ -74,30 +76,9 @@ int short uno[7];
 int short due[7];
 int short tre[7];
 int short quattro[7];
+boolean statusPallini;
 
-void setup()
-{
-  #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
-    clock_prescale_set(clock_div_1);
-  #endif
-
-  strip.begin();            // Inizializzazione Neopixel
-  strip.clear();            // Spegne tutti i led
-  strip.show();             // Spegne tutti i led
-  strip.setBrightness(255); // Luminosità (0 - 255)
-
-  // Imposta RTC in run-mode e disabilita la protezione da scrittura
-  rtc.halt(false);
-  rtc.writeProtect(false);
-
-  // Le seguenti linee possono essere commentate per utilizzare i valori già memorizzati nel DS1302
-  rtc.setDOW(SUNDAY);         // Imposta il giorno della settimana a SUNDAY
-  rtc.setTime(13, 32, 0);     // Imposta l'ora (Formato 24hr)
-  rtc.setDate(1, 1, 2020);    // Imposta la data
-}
-
-void loop()
-{
+void orologio() {
   strip.clear();
   
   oraCorrente = rtc.getTimeStr();
@@ -124,7 +105,7 @@ void loop()
   
   //Controllo ora per impostare il colore dell'orologio
   if((String(oraCorrente[0]) + String(oraCorrente[1])).toInt() != oraVecchia) {
-    controlloOra((String(oraCorrente[0]) + String(oraCorrente[1])).toInt());
+    cambioColore((String(oraCorrente[0]) + String(oraCorrente[1])).toInt());
     oraVecchia = (String(oraCorrente[0]) + String(oraCorrente[1])).toInt();
   }
   
@@ -168,9 +149,55 @@ void loop()
     }
   }
   strip.show();
-  delay(1000);
 }
-void controlloOra(int ora) {
+
+void blinkPallini() {
+  if(statusPallini) {
+    statusPallini = !statusPallini;
+    strip.setPixelColor(pallini[0], 0, 0, 0);
+    strip.setPixelColor(pallini[1], 0, 0, 0);
+  }
+  else {
+    statusPallini = !statusPallini;
+    strip.setPixelColor(pallini[0], colore);
+    strip.setPixelColor(pallini[1], colore);
+  }
+  strip.show();
+}
+
+TimedAction azioneOrologio = TimedAction(3600, orologio);
+TimedAction azionePallini = TimedAction(1000, blinkPallini);
+
+void setup()
+{
+  Serial.begin(9600);
+  
+  #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
+    clock_prescale_set(clock_div_1);
+  #endif
+
+  strip.begin();            // Inizializzazione Neopixel
+  strip.clear();            // Spegne tutti i led
+  strip.show();             // Spegne tutti i led
+  strip.setBrightness(255); // Luminosità (0 - 255)
+
+  // Imposta RTC in run-mode e disabilita la protezione da scrittura
+  rtc.halt(false);
+  rtc.writeProtect(false);
+
+  // Le seguenti linee possono essere commentate per utilizzare i valori già memorizzati nel DS1302
+  rtc.setDOW(SUNDAY);         // Imposta il giorno della settimana a SUNDAY
+  rtc.setTime(8, 58, 0);      // Imposta l'ora (Formato 24hr)
+  rtc.setDate(1, 1, 2020);    // Imposta la data
+}
+
+void loop()
+{
+  azioneOrologio.check();
+  azionePallini.check();
+}
+
+void cambioColore(int ora) {
     colore = strip.Color(arrayColori[ora][2], arrayColori[ora][1], arrayColori[ora][2]);
 }
 
