@@ -8,5 +8,3 @@ Per il corretto funzionamento questo progetto richiede le seguenti librerie:
 La quantità di led è impostata a 102:
 * 25 per ogni cifra
 * 2 pallini tra ore e minuti
-
-# prova
