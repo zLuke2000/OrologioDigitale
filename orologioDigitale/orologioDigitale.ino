@@ -22,30 +22,30 @@ Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 uint32_t colore = strip.Color(255, 255, 255);
 
-const short int arrayColori[24][3] = {{18, 19, 41},     // 00:xx
-                                      {29, 23, 55},     // 01:xx
-                                      {39, 37, 85},     // 02:xx
-                                      {42, 46, 106},    // 03:xx
+const short int arrayColori[24][3] = {{19, 18, 41},     // 00:xx
+                                      {23, 29, 55},     // 01:xx
+                                      {37, 39, 85},     // 02:xx
+                                      {46, 42, 106},    // 03:xx
                                       {1, 87, 94},      // 04:xx
-                                      {0, 104, 134},    // 05:xx
-                                      {0, 146, 161},    // 06:xx
-                                      {103, 179, 108},  // 07:xx
-                                      {139, 255, 81},   // 08:xx
-                                      {18, 19, 41},     // 09:xx
-                                      {221, 220, 31},   // 10:xx
+                                      {104, 0, 134},    // 05:xx
+                                      {146, 0, 161},    // 06:xx
+                                      {179, 103, 108},  // 07:xx
+                                      {255, 139, 81},   // 08:xx
+                                      {19, 18, 41},     // 09:xx
+                                      {220, 221, 31},   // 10:xx
                                       {255, 255, 0},    // 11:xx
-                                      {243, 174, 0},    // 12:xx
-                                      {239, 121, 0},    // 13:xx
-                                      {244, 89, 0},     // 14:xx
-                                      {231, 56, 39},    // 15:xx
-                                      {209, 49, 39},    // 16:xx
-                                      {222, 28, 20},    // 17:xx
-                                      {227, 6, 19},     // 18:xx
-                                      {192, 22, 52},    // 19:xx
-                                      {129, 22, 52},    // 20:xx
-                                      {103, 27, 85},    // 21:xx
-                                      {70, 51, 138},    // 22:xx
-                                      {40, 46, 101}};  // 23:xx
+                                      {174, 243, 0},    // 12:xx
+                                      {121, 239, 0},    // 13:xx
+                                      {89, 244, 0},     // 14:xx
+                                      {56, 231, 39},    // 15:xx
+                                      {49, 209, 39},    // 16:xx
+                                      {28, 222, 20},    // 17:xx
+                                      {6, 227, 19},     // 18:xx
+                                      {22, 192, 52},    // 19:xx
+                                      {22, 129, 52},    // 20:xx
+                                      {27, 103, 85},    // 21:xx
+                                      {51, 70, 138},    // 22:xx
+                                      {46, 40, 101}};  // 23:xx
 const short int pallini[2] = {50, 51};
 const short int offsetCifre[4] =  {0, 25, 52, 77};
 const short int moduli[7][4] = {{0, 1, 2, 3},
@@ -187,7 +187,7 @@ void setup()
 
   // Le seguenti linee possono essere commentate per utilizzare i valori già memorizzati nel DS1302
   rtc.setDOW(SUNDAY);         // Imposta il giorno della settimana a SUNDAY
-  rtc.setTime(8, 58, 0);      // Imposta l'ora (Formato 24hr)
+  rtc.setTime(12, 58, 0);      // Imposta l'ora (Formato 24hr)
   rtc.setDate(1, 1, 2020);    // Imposta la data
 }
 
