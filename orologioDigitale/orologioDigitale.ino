@@ -7,7 +7,7 @@
 */
 
 #include <DS1302.h>
-#include <TimedAction.h>
+//#include <TimedAction.h>
 #include <Adafruit_NeoPixel.h>
 
 DS1302 rtc(2, 3, 4);
@@ -165,9 +165,10 @@ void blinkPallini() {
   strip.show();
 }
 
+/*
 TimedAction azioneOrologio = TimedAction(3600, orologio);
 TimedAction azionePallini = TimedAction(1000, blinkPallini);
-
+*/
 void setup()
 {
   Serial.begin(9600);
@@ -180,21 +181,17 @@ void setup()
   strip.clear();            // Spegne tutti i led
   strip.show();             // Spegne tutti i led
   strip.setBrightness(255); // Luminosità (0 - 255)
-
-  // Imposta RTC in run-mode e disabilita la protezione da scrittura
-  rtc.halt(false);
-  rtc.writeProtect(false);
-
-  // Le seguenti linee possono essere commentate per utilizzare i valori già memorizzati nel DS1302
-  rtc.setDOW(SUNDAY);         // Imposta il giorno della settimana a SUNDAY
-  rtc.setTime(12, 58, 0);      // Imposta l'ora (Formato 24hr)
-  rtc.setDate(1, 1, 2020);    // Imposta la data
 }
 
 void loop()
 {
+  /*
   azioneOrologio.check();
   azionePallini.check();
+  */
+  orologio();
+  blinkPallini();
+  delay(1000);
 }
 
 void cambioColore(int ora) {
