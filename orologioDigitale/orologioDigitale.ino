@@ -7,7 +7,6 @@
 */
 
 #include <DS1302.h>
-//#include <TimedAction.h>
 #include <Adafruit_NeoPixel.h>
 
 DS1302 rtc(2, 3, 4);
@@ -165,10 +164,6 @@ void blinkPallini() {
   strip.show();
 }
 
-/*
-TimedAction azioneOrologio = TimedAction(3600, orologio);
-TimedAction azionePallini = TimedAction(1000, blinkPallini);
-*/
 void setup()
 {
   Serial.begin(9600);
@@ -185,10 +180,6 @@ void setup()
 
 void loop()
 {
-  /*
-  azioneOrologio.check();
-  azionePallini.check();
-  */
   orologio();
   blinkPallini();
   delay(1000);
