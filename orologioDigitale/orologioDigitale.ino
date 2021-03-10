@@ -30,7 +30,7 @@ const short int arrayColori[24][3] = {{19, 18, 41},     // 00:xx
                                       {146, 0, 161},    // 06:xx
                                       {179, 103, 108},  // 07:xx
                                       {255, 139, 81},   // 08:xx
-                                      {19, 18, 41},     // 09:xx
+                                      {19, 255, 41},     // 09:xx
                                       {220, 221, 31},   // 10:xx
                                       {255, 255, 0},    // 11:xx
                                       {174, 243, 0},    // 12:xx
@@ -54,19 +54,18 @@ const short int moduli[7][4] = {{0, 1, 2, 3},
                                 {14, 15, 16, 17},
                                 {18, 19, 20, -1},
                                 {21, 22, 23, 24}};
-const short int numeri[10][7] = {{1, 2, 3, 5, 6, 7, -1},
-                                 {3, 7, -1, -1, -1, -1, -1},
-                                 {1, 2, 4, 6, 7, -1, -1},
-                                 {2, 3, 4, 6, 7, -1, -1},
-                                 {3, 4, 5, 7, -1, -1, -1},
-                                 {2, 3, 4, 5, 6, -1, -1},
-                                 {1, 2, 3, 4, 5, -1, -1},
-                                 {3, 6, 7, -1, -1, -1, -1},
-                                 {1, 2, 3, 4, 5, 6, 7},
-                                 {3, 4, 5, 6, 7, -1, -1}};
+const short int numeri[10][7] = {{1, 2, 3, 5, 6, 7, -1},      //0
+                                 {3, 7, -1, -1, -1, -1, -1},  //1
+                                 {1, 2, 4, 6, 7, -1, -1},     //2
+                                 {2, 3, 4, 6, 7, -1, -1},     //3
+                                 {3, 4, 5, 7, -1, -1, -1},    //4
+                                 {2, 3, 4, 5, 6, -1, -1},     //5
+                                 {1, 2, 3, 4, 5, 6, -1},      //6
+                                 {3, 6, 7, -1, -1, -1, -1},   //7
+                                 {1, 2, 3, 4, 5, 6, 7},       //8
+                                 {2, 3, 4, 5, 6, 7, -1}};     //9
 
 String oraCorrente = "";
-int oraVecchia = -1;
 int short cifraUno = 0;
 int short cifraDue = 0;
 int short cifraTre = 0;
@@ -80,12 +79,6 @@ boolean statusPallini;
 void orologio() {
   strip.clear();
   
-  oraCorrente = rtc.getTimeStr();
-  cifraUno = oraCorrente[0] - 48;
-  cifraDue = oraCorrente[1] - 48;
-  cifraTre = oraCorrente[3] - 48;
-  cifraQuattro = oraCorrente[4] - 48;
-    
   for(int i=0; i<7; i++) {
     uno[i] = numeri[cifraUno][i];
   }
@@ -101,13 +94,7 @@ void orologio() {
   for(int i=0; i<7; i++) {
     quattro[i] = numeri[cifraQuattro][i];
   }
-  
-  //Controllo ora per impostare il colore dell'orologio
-  if((String(oraCorrente[0]) + String(oraCorrente[1])).toInt() != oraVecchia) {
-    cambioColore((String(oraCorrente[0]) + String(oraCorrente[1])).toInt());
-    oraVecchia = (String(oraCorrente[0]) + String(oraCorrente[1])).toInt();
-  }
-  
+
   for(int i=0; i<7; i++) {
     if(uno[i] != -1) {
       for(int j=0; j<4; j++) {
@@ -166,7 +153,7 @@ void blinkPallini() {
 
 void setup()
 {
-  Serial.begin(9600);
+  //Serial.begin(9600);
   
   #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
     clock_prescale_set(clock_div_1);
@@ -180,13 +167,20 @@ void setup()
 
 void loop()
 {
+  oraCorrente = rtc.getTimeStr();
+  cifraUno = oraCorrente[0] - 48;
+  cifraDue = oraCorrente[1] - 48;
+  cifraTre = oraCorrente[3] - 48;
+  cifraQuattro = oraCorrente[4] - 48;
+
   orologio();
   blinkPallini();
+  cambioColore((String(cifraUno) + String(cifraDue)).toInt());
   delay(1000);
 }
 
 void cambioColore(int ora) {
-    colore = strip.Color(arrayColori[ora][2], arrayColori[ora][1], arrayColori[ora][2]);
+  colore = strip.Color(arrayColori[ora][0], arrayColori[ora][1], arrayColori[ora][2]);
 }
 
 void coloraCifra(int led) {
